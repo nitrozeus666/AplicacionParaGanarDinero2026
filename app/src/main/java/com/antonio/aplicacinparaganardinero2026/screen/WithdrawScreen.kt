@@ -49,6 +49,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,7 +97,7 @@ fun WithdrawScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Disponible para retirar:", color = MaterialTheme.colorScheme.onSurface)
                     Text(
-                        text = "$${String.format("%.2f", balance)}",
+                        text = "$${String.format(Locale.US, ".2f", balance)}",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
