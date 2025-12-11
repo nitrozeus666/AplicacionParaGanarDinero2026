@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.AplicaciónParaGanarDinero2026" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Usamos un tema AppCompat directo para evitar conflictos -->
+    <style name="Theme.AplicaciónParaGanarDinero2026" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Colores básicos del sistema (barra de estado, etc) -->
+        <item name="android:statusBarColor">#121212</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">#121212</item>
+    </style>
 </resources>
