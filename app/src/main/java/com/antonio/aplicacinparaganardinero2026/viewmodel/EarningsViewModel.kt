@@ -62,6 +62,10 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
             userPreferences.saveBalance(amount)
         }
     }
+
+    fun getTaskById(id: Int): Task? {
+        return tasks.find { it.id == id }
+    }
 }
 
 class EarningsViewModelFactory(private val userPreferences: UserPreferences) : ViewModelProvider.Factory {
