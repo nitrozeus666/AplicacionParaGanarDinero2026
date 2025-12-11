@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.antonio.aplicacinparaganardinero2026.screen.AplicacionParaGanarDinero2026Theme
 import com.antonio.aplicacinparaganardinero2026.screen.HomeScreen
+import com.antonio.aplicacinparaganardinero2026.screen.ProfileScreen
 import com.antonio.aplicacinparaganardinero2026.screen.TaskDetailScreen
 import com.antonio.aplicacinparaganardinero2026.screen.WithdrawScreen
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
@@ -70,6 +71,13 @@ fun AppNavigation(
                     onNavigateBack = {
                         navController.popBackStack() // Volver atrás
                     }
+                )
+            }
+
+            composable("profile") {
+                ProfileScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack()}
                 )
             }
         }
