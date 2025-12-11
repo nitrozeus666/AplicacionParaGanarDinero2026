@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.antonio.aplicacinparaganardinero2026.model.UserPreferences
+import com.antonio.aplicacinparaganardinero2026.navigation.AppNavigation
 import com.antonio.aplicacinparaganardinero2026.screen.HomeScreen
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModelFactory
@@ -22,9 +23,9 @@ class MainActivity : AppCompatActivity() {
                 factory = EarningsViewModelFactory(userPreferences)
             )
 
-            HomeScreen(
+            AppNavigation(
                 viewModel = viewModel,
-                onLanguageChange = { code -> changeLanguage(code)}
+                onLanguageChange = { languageCode -> changeLanguage(languageCode)}
             )
         }
     }

@@ -85,73 +85,80 @@ fun AplicaciónParaGanarDinero2026Theme(
 @Composable
 fun HomeScreen(
     viewModel: EarningsViewModel,
-    onLanguageChange: (String) -> Unit
+    onLanguageChange: (String) -> Unit,
+    onTaskClick: (Int) -> Unit
 ) {
     // Escuchamos los datos vivos del ViewModel
     val balance by viewModel.balance.collectAsState()
     val isDarkMode by viewModel.isDarkMode.collectAsState()
 
     // Envolvemos todo en nuestro tema dinámico
-    AplicaciónParaGanarDinero2026Theme(darkTheme = isDarkMode) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(id = R.string.app_name),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ),
+                actions = {
+                    // Botón de Modo Oscuro/Claro
+                    IconButton(onClick = { viewModel.toogleTheme() }) {
+                        Icon(
+                            imageVector = if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
+                            contentDescription = "Toggle Theme",
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.primary
-                    ),
-                    actions = {
-                        // Botón de Modo Oscuro/Claro
-                        IconButton(onClick = { viewModel.toogleTheme() }) {
-                            Icon(
-                                imageVector = if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
-                                contentDescription = "Toggle Theme",
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-
-                        // Botones de Idioma
-                        TextButton(onClick = { onLanguageChange("es") }) {
-                            Text("ES", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
-                        }
-                        TextButton(onClick = { onLanguageChange("en") }) {
-                            Text("EN", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
-                        }
                     }
-                )
-            }
-        ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .background(MaterialTheme.colorScheme.background) // Usa el color de fondo del tema
-            ) {
-                // Tarjeta de Saldo
-                BalanceCard(balance = balance, onWithdraw = { viewModel.withdraw() })
 
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Título de la lista
-                Text(
-                    text = stringResource(id = R.string.available_tasks),
-                    color = MaterialTheme.colorScheme.onSurface, // Se adapta a negro o blanco
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                // Lista de Tareas
-                TaskList(tasks = viewModel.tasks) { reward ->
-                    viewModel.completeTask(reward)
+                    // Botones de Idioma
+                    TextButton(onClick = { onLanguageChange("es") }) {
+                        Text(
+                            "ES",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    TextButton(onClick = { onLanguageChange("en") }) {
+                        Text(
+                            "EN",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(MaterialTheme.colorScheme.background) // Usa el color de fondo del tema
+        ) {
+            // Tarjeta de Saldo
+            BalanceCard(balance = balance, onWithdraw = { viewModel.withdraw() })
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Título de la lista
+            Text(
+                text = stringResource(id = R.string.available_tasks),
+                color = MaterialTheme.colorScheme.onSurface, // Se adapta a negro o blanco
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            // Lista de Tareas
+            TaskList(tasks = viewModel.tasks) { taskId ->
+                onTaskClick(taskId)
             }
         }
     }
@@ -211,11 +218,8 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
 }
 
 @Composable
-fun TaskList(tasks: List<Task>, onTaskClick: (Double) -> Unit) {
-    LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+fun TaskList(tasks: List<Task>, onTaskClick: (Int) -> Unit) { // (Int) -> Unit
+    LazyColumn() {
         items(tasks) { task ->
             TaskItem(task, onTaskClick)
         }
@@ -223,14 +227,14 @@ fun TaskList(tasks: List<Task>, onTaskClick: (Double) -> Unit) {
 }
 
 @Composable
-fun TaskItem(task: Task, onClick: (Double) -> Unit) {
+fun TaskItem(task: Task, onClick: (Int) -> Unit) { // (Int) -> Unit {
     Card(
         // El color de fondo de la tarjeta cambia según el tema (Blanco o Gris oscuro)
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick(task.reward) }
+            .clickable { onClick(task.id)}
     ) {
         Row(
             modifier = Modifier
