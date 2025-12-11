@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">AplicaciónParaGanarDinero2026</string>
+    <string name="app_name">CyberEarn 2026</string>
+
+    <string name="current_balance">Saldo Actual</string>
+    <string name="withdraw_funds">Retirar Fondos</string>
+    <string name="available_tasks">Tareas Disponibles</string>
+
+    <string name="task_vision_title">Entrenar IA de Visión</string>
+    <string name="task_vision_desc">Identifica objetos en 5 fotos</string>
+
+    <string name="task_ad_title">Ver anuncio Holográfico</string>
+    <string name="task_ad_desc">Video patrocinado de 30s</string>
+
+    <string name="task_translate_title">Validar Traducción</string>
+    <string name="task_translate_desc">¿Es correcto este texto?</string>
+
+    <string name="task_bandwidth_title">Compartir Ancho de Banda</string>
+    <string name="task_bandwidth_desc">5 mins de red compartida</string>
 </resources>
