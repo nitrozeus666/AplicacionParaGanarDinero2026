@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.antonio.aplicacinparaganardinero2026.screen.AplicaciónParaGanarDinero2026Theme
 import com.antonio.aplicacinparaganardinero2026.screen.HomeScreen
 import com.antonio.aplicacinparaganardinero2026.screen.TaskDetailScreen
+import com.antonio.aplicacinparaganardinero2026.screen.WithdrawScreen
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
 
 @Composable
@@ -46,6 +47,13 @@ fun AppNavigation(
 
                 TaskDetailScreen(
                     taskId = taskId,
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            composable("withdraw") {
+                WithdrawScreen(
                     viewModel = viewModel,
                     onNavigateBack = { navController.popBackStack() }
                 )
