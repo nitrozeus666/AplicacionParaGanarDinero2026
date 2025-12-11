@@ -77,7 +77,7 @@ fun HomeScreen(viewModel: EarningsViewModel = viewModel(), onLanguageChange: (St
                 actions = {
                     TextButton(onClick = { onLanguageChange("es") }) {
                         Text(
-                            "EN",
+                            "ES",
                             color = if (stringResource(R.string.current_balance) == "Saldo Actual") Color.White else Color.Gray
                         )
                     }
