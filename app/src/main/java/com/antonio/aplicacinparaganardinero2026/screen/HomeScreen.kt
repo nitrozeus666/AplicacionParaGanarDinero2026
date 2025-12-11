@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import com.antonio.aplicacinparaganardinero2026.R
 import com.antonio.aplicacinparaganardinero2026.model.Task
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
+import java.util.Locale
 
 @Composable
 fun AplicacionParaGanarDinero2026Theme(
@@ -199,7 +200,7 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
                     color = Color.White.copy(alpha = 0.8f) // Siempre blanco porque el fondo es azul
                 )
                 Text(
-                    text = "$${String.format("%.2f", balance)}",
+                    text = "$${String.format(Locale.US, "%.2f", balance)}",
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
