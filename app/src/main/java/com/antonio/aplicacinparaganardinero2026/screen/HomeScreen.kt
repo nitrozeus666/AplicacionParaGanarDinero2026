@@ -46,7 +46,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.antonio.aplicacinparaganardinero2026.R
 import com.antonio.aplicacinparaganardinero2026.model.Task
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
@@ -86,82 +85,88 @@ fun AplicaciónParaGanarDinero2026Theme(
 fun HomeScreen(
     viewModel: EarningsViewModel,
     onLanguageChange: (String) -> Unit,
-    onTaskClick: (Int) -> Unit
+    onTaskClick: (Int) -> Unit,
+    onWithdrawClick: () -> Unit
 ) {
     // Escuchamos los datos vivos del ViewModel
     val balance by viewModel.balance.collectAsState()
     val isDarkMode by viewModel.isDarkMode.collectAsState()
 
-    // Envolvemos todo en nuestro tema dinámico
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    // Botón de Modo Oscuro/Claro
-                    IconButton(onClick = { viewModel.toogleTheme() }) {
-                        Icon(
-                            imageVector = if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
-                            contentDescription = "Toggle Theme",
-                            tint = MaterialTheme.colorScheme.onSurface
+    AplicaciónParaGanarDinero2026Theme(darkTheme = isDarkMode) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(id = R.string.app_name),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
                         )
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    actions = {
+                        // Botón de Modo Oscuro/Claro
+                        IconButton(onClick = { viewModel.toogleTheme() }) {
+                            Icon(
+                                imageVector = if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
+                                contentDescription = "Toggle Theme",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
 
-                    // Botones de Idioma
-                    TextButton(onClick = { onLanguageChange("es") }) {
-                        Text(
-                            "ES",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.Bold
-                        )
+                        // Botones de Idioma
+                        TextButton(onClick = { onLanguageChange("es") }) {
+                            Text(
+                                "ES",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        TextButton(onClick = { onLanguageChange("en") }) {
+                            Text(
+                                "EN",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
-                    TextButton(onClick = { onLanguageChange("en") }) {
-                        Text(
-                            "EN",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                )
+            }
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .background(MaterialTheme.colorScheme.background) // Usa el color de fondo del tema
+            ) {
+                // Tarjeta de Saldo
+                BalanceCard(
+                    balance = balance,
+                    onWithdraw = onWithdrawClick
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Título de la lista
+                Text(
+                    text = stringResource(id = R.string.available_tasks),
+                    color = MaterialTheme.colorScheme.onSurface, // Se adapta a negro o blanco
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                // Lista de Tareas
+                TaskList(tasks = viewModel.tasks) { taskId ->
+                    onTaskClick(taskId)
                 }
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .background(MaterialTheme.colorScheme.background) // Usa el color de fondo del tema
-        ) {
-            // Tarjeta de Saldo
-            BalanceCard(balance = balance, onWithdraw = { viewModel.withdraw() })
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Título de la lista
-            Text(
-                text = stringResource(id = R.string.available_tasks),
-                color = MaterialTheme.colorScheme.onSurface, // Se adapta a negro o blanco
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-
-            // Lista de Tareas
-            TaskList(tasks = viewModel.tasks) { taskId ->
-                onTaskClick(taskId)
             }
         }
     }
+
 }
 
 // --- 3. COMPONENTES REUTILIZABLES ---
@@ -234,7 +239,7 @@ fun TaskItem(task: Task, onClick: (Int) -> Unit) { // (Int) -> Unit {
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick(task.id)}
+            .clickable { onClick(task.id) }
     ) {
         Row(
             modifier = Modifier
