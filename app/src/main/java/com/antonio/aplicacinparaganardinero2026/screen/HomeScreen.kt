@@ -17,12 +17,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -76,62 +80,84 @@ fun AplicaciónParaGanarDinero2026Theme(
     )
 }
 
-// --- PANTALLA PRINCIPAL ---
+// --- 2. PANTALLA PRINCIPAL ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: EarningsViewModel, onLanguageChange: (String) -> Unit) {
+fun HomeScreen(
+    viewModel: EarningsViewModel,
+    onLanguageChange: (String) -> Unit
+) {
+    // Escuchamos los datos vivos del ViewModel
     val balance by viewModel.balance.collectAsState()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        stringResource(id = R.string.app_name),
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    TextButton(onClick = { onLanguageChange("es") }) {
+    val isDarkMode by viewModel.isDarkMode.collectAsState()
+
+    // Envolvemos todo en nuestro tema dinámico
+    AplicaciónParaGanarDinero2026Theme(darkTheme = isDarkMode) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
                         Text(
-                            "ES",
-                            color = if (stringResource(R.string.current_balance) == "Saldo Actual") Color.White else Color.Gray
+                            text = stringResource(id = R.string.app_name),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
                         )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    actions = {
+                        // Botón de Modo Oscuro/Claro
+                        IconButton(onClick = { viewModel.toogleTheme() }) {
+                            Icon(
+                                imageVector = if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
+                                contentDescription = "Toggle Theme",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                        // Botones de Idioma
+                        TextButton(onClick = { onLanguageChange("es") }) {
+                            Text("ES", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
+                        }
+                        TextButton(onClick = { onLanguageChange("en") }) {
+                            Text("EN", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
+                        }
                     }
-                    TextButton(onClick = { onLanguageChange("en") }) {
-                        Text(
-                            "En",
-                            color = if (stringResource(R.string.current_balance) == "Current Balance") Color.White else Color.Gray
-                        )
-                    }
+                )
+            }
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .background(MaterialTheme.colorScheme.background) // Usa el color de fondo del tema
+            ) {
+                // Tarjeta de Saldo
+                BalanceCard(balance = balance, onWithdraw = { viewModel.withdraw() })
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Título de la lista
+                Text(
+                    text = stringResource(id = R.string.available_tasks),
+                    color = MaterialTheme.colorScheme.onSurface, // Se adapta a negro o blanco
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                // Lista de Tareas
+                TaskList(tasks = viewModel.tasks) { reward ->
+                    viewModel.completeTask(reward)
                 }
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            BalanceCard(balance = balance, onWithdraw = { viewModel.withdraw()})
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                text = stringResource(id = R.string.available_tasks),
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            TaskList(tasks = viewModel.tasks) { reward ->
-                viewModel.completeTask(reward)
             }
         }
     }
 }
+
+// --- 3. COMPONENTES REUTILIZABLES ---
 
 @Composable
 fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
@@ -147,7 +173,10 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    Brush.horizontalGradient(colors = listOf(Color(0xFF2962FF), Color(0xFF00E5FF)))
+                    // Mantenemos el gradiente azul siempre, se ve bien en ambos modos
+                    Brush.horizontalGradient(
+                        colors = listOf(Color(0xFF2962FF), Color(0xFF00E5FF))
+                    )
                 )
         ) {
             Column(
@@ -156,21 +185,22 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
             ) {
                 Text(
                     text = stringResource(id = R.string.current_balance),
-                    color = Color.White.copy(alpha = 0.8f)
+                    color = Color.White.copy(alpha = 0.8f) // Siempre blanco porque el fondo es azul
                 )
                 Text(
                     text = "$${String.format("%.2f", balance)}",
-                    fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Color.White
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = onWithdraw,
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .height(36.dp)
+                    modifier = Modifier.height(36.dp)
                 ) {
                     Text(
-                        stringResource(id = R.string.withdraw_funds),
+                        text = stringResource(id = R.string.withdraw_funds),
                         color = Color.Black,
                         fontSize = 12.sp
                     )
@@ -195,7 +225,9 @@ fun TaskList(tasks: List<Task>, onTaskClick: (Double) -> Unit) {
 @Composable
 fun TaskItem(task: Task, onClick: (Double) -> Unit) {
     Card(
+        // El color de fondo de la tarjeta cambia según el tema (Blanco o Gris oscuro)
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick(task.reward) }
@@ -209,19 +241,22 @@ fun TaskItem(task: Task, onClick: (Double) -> Unit) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = task.icon, contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(32.dp)
+                    imageVector = task.icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary, // Verde (Neon o Bosque)
+                    modifier = Modifier.size(32.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
+                    // Título y descripción usan los IDs de string resources
                     Text(
                         text = stringResource(id = task.title),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface, // Texto adaptativo
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = stringResource(id = task.description),
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         fontSize = 12.sp
                     )
                 }
