@@ -31,6 +31,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -60,7 +62,8 @@ fun AplicaciónParaGanarDinero2026Theme(content: @Composable () -> Unit) {
 // --- PANTALLA PRINCIPAL ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: EarningsViewModel = viewModel(), onLanguageChange: (String) -> Unit) {
+fun HomeScreen(viewModel: EarningsViewModel, onLanguageChange: (String) -> Unit) {
+    val balance by viewModel.balance.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -97,7 +100,7 @@ fun HomeScreen(viewModel: EarningsViewModel = viewModel(), onLanguageChange: (St
                 .padding(padding)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            BalanceCard(balance = viewModel.balance, onWithdraw = { viewModel.withdraw() })
+            BalanceCard(balance = balance, onWithdraw = { viewModel.withdraw()})
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(id = R.string.available_tasks),
