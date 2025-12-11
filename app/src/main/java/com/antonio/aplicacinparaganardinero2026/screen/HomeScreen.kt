@@ -30,6 +30,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,14 +48,30 @@ import com.antonio.aplicacinparaganardinero2026.model.Task
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
 
 @Composable
-fun AplicaciónParaGanarDinero2026Theme(content: @Composable () -> Unit) {
+fun AplicaciónParaGanarDinero2026Theme(
+    darkTheme: Boolean,
+    content: @Composable () -> Unit
+) {
+    val DarkColors = darkColorScheme(
+        primary = Color(0xFF00E5FF),
+        secondary = Color(0xFF76FF03),
+        background = Color(0xFF121212),
+        surface = Color(0xFF1E1E1E),
+        onSurface = Color.White
+    )
+
+    val LightColors = lightColorScheme(
+        primary = Color(0xFF0091EA),
+        secondary = Color(0xFF2E7D32),
+        background = Color(0xFFF5F5F5),
+        surface = Color(0xFFFFFFFF),
+        onSurface = Color.Black
+    )
+
+    val colorScheme = if (darkTheme) DarkColors else LightColors
+
     MaterialTheme(
-        colorScheme = darkColorScheme(
-            primary = Color(0xFF00E5FF),
-            secondary = Color(0xFF76FF03),
-            background = Color(0xFF121212),
-            surface = Color(0xFF1E1E1E)
-        ),
+        colorScheme = colorScheme,
         content = content
     )
 }
