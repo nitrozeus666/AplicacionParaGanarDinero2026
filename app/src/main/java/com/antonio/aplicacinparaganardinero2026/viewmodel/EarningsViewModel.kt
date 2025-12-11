@@ -66,6 +66,15 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
     fun getTaskById(id: Int): Task? {
         return tasks.find { it.id == id }
     }
+
+    fun withdrawAmount(amount: Double): Boolean {
+        if (amount > 0 && amount <= _balance.value) {
+            val newBalance = _balance.value - amount
+            updateBalance(newBalance)
+            return true
+        }
+        return false
+    }
 }
 
 class EarningsViewModelFactory(private val userPreferences: UserPreferences) : ViewModelProvider.Factory {
