@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">CyberEarn 2026</string>
+
+    <!-- General UI -->
+    <string name="current_balance">Current Balance</string>
+    <string name="withdraw_funds">WITHDRAW FUNDS</string>
+    <string name="available_tasks">Available Tasks</string>
+
+    <!-- Tasks Data -->
+    <string name="task_vision_title">Train Vision AI</string>
+    <string name="task_vision_desc">Identify objects in 5 photos</string>
+
+    <string name="task_ad_title">Watch Holographic Ad</string>
+    <string name="task_ad_desc">30s sponsored video</string>
+
+    <string name="task_translate_title">Validate Translation</string>
+    <string name="task_translate_desc">Is this text correct?</string>
+
+    <string name="task_bandwidth_title">Share Bandwidth</string>
+    <string name="task_bandwidth_desc">5 mins shared network</string>
+</resources>
