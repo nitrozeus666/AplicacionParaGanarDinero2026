@@ -9,11 +9,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.antonio.aplicacinparaganardinero2026.R
 import com.antonio.aplicacinparaganardinero2026.model.Task
+import com.antonio.aplicacinparaganardinero2026.model.Transaction
 import com.antonio.aplicacinparaganardinero2026.model.UserPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 
 class EarningsViewModel(private val userPreferences: UserPreferences) : ViewModel() {
@@ -22,6 +24,9 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
 
     private val _isDarkMode = MutableStateFlow(true)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
+
+    private val _history = MutableStateFlow<List<Transaction>>(emptyList())
+    val history: StateFlow<List<Transaction>> = _history.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -48,10 +53,8 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
     fun completeTask(reward: Double) {
         val newTotal = _balance.value + reward
         updateBalance(newTotal)
-    }
 
-    fun withdraw() {
-        updateBalance(0.0)
+        addTransaction("Tarea Completada", reward, true)
     }
 
     private fun updateBalance(amount: Double) {
@@ -68,9 +71,22 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
         if (amount > 0 && amount <= _balance.value) {
             val newBalance = _balance.value - amount
             updateBalance(newBalance)
+
+            addTransaction("Retiro de Fondos", amount, false)
             return true
         }
         return false
+    }
+
+    private fun addTransaction(title: String, amount: Double, isDeposit: Boolean) {
+        val newTransaction = Transaction(
+            id = UUID.randomUUID().toString(),
+            title = title,
+            amount = amount,
+            date = "Hoy",
+            isDeposit = isDeposit
+        )
+        _history.value = listOf(newTransaction) + _history.value
     }
 }
 
