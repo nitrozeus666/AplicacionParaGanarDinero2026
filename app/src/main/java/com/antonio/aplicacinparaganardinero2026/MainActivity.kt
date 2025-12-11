@@ -8,7 +8,6 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.antonio.aplicacinparaganardinero2026.model.UserPreferences
 import com.antonio.aplicacinparaganardinero2026.screen.HomeScreen
-import com.antonio.aplicacinparaganardinero2026.ui.theme.AplicaciónParaGanarDinero2026Theme
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModelFactory
 
@@ -19,18 +18,14 @@ class MainActivity : AppCompatActivity() {
         val userPreferences = UserPreferences(applicationContext)
 
         setContent {
-            AplicaciónParaGanarDinero2026Theme {
-                val viewModel: EarningsViewModel = viewModel(
-                    factory = EarningsViewModelFactory(userPreferences)
-                )
+            val viewModel: EarningsViewModel = viewModel(
+                factory = EarningsViewModelFactory(userPreferences)
+            )
 
-                HomeScreen(
-                    viewModel = viewModel,
-                    onLanguageChange = { languageCode ->
-                        changeLanguage(languageCode)
-                    }
-                )
-            }
+            HomeScreen(
+                viewModel = viewModel,
+                onLanguageChange = { code -> changeLanguage(code)}
+            )
         }
     }
 
