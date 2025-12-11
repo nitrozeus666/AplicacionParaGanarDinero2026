@@ -34,10 +34,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.antonio.aplicacinparaganardinero2026.R
 import com.antonio.aplicacinparaganardinero2026.model.Task
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
 
@@ -61,7 +63,7 @@ fun HomeScreen(viewModel: EarningsViewModel = viewModel()) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("CyberEarn 2026", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(id = R.string.app_name), fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                     titleContentColor = MaterialTheme.colorScheme.primary
@@ -78,7 +80,7 @@ fun HomeScreen(viewModel: EarningsViewModel = viewModel()) {
             BalanceCard(balance = viewModel.balance, onWithdraw = { viewModel.withdraw() })
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = "Tareas Disponibles",
+                text = stringResource(id = R.string.available_tasks),
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -107,7 +109,7 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
                 modifier = Modifier.align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Saldo Actual", color = Color.White.copy(alpha = 0.8f))
+                Text(text = stringResource(id = R.string.current_balance), color = Color.White.copy(alpha = 0.8f))
                 Text(
                     text = "$${String.format("%.2f", balance)}",
                     fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Color.White
@@ -117,7 +119,7 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                     modifier = Modifier.padding(top = 8.dp).height(36.dp)
                 ) {
-                    Text("RETIRAR FONDOS", color = Color.Black, fontSize = 12.sp)
+                    Text(stringResource(id = R.string.withdraw_funds), color = Color.Black, fontSize = 12.sp)
                 }
             }
         }
@@ -154,8 +156,8 @@ fun TaskItem(task: Task, onClick: (Double) -> Unit) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Text(text = task.title, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text(text = task.description, color = Color.Gray, fontSize = 12.sp)
+                    Text(text = stringResource(id = task.title), color = Color.White, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(id = task.description), color = Color.Gray, fontSize = 12.sp)
                 }
             }
             Text(text = "+$${task.reward}", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold)
