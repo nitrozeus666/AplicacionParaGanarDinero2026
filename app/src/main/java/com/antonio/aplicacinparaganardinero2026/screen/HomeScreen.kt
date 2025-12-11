@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.darkColorScheme
@@ -59,15 +60,34 @@ fun AplicaciónParaGanarDinero2026Theme(content: @Composable () -> Unit) {
 // --- PANTALLA PRINCIPAL ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: EarningsViewModel = viewModel()) {
+fun HomeScreen(viewModel: EarningsViewModel = viewModel(), onLanguageChange: (String) -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(id = R.string.app_name), fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        stringResource(id = R.string.app_name),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                     titleContentColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                actions = {
+                    TextButton(onClick = { onLanguageChange("es") }) {
+                        Text(
+                            "EN",
+                            color = if (stringResource(R.string.current_balance) == "Saldo Actual") Color.White else Color.Gray
+                        )
+                    }
+                    TextButton(onClick = { onLanguageChange("en") }) {
+                        Text(
+                            "En",
+                            color = if (stringResource(R.string.current_balance) == "Current Balance") Color.White else Color.Gray
+                        )
+                    }
+                }
             )
         }
     ) { padding ->
@@ -96,20 +116,28 @@ fun HomeScreen(viewModel: EarningsViewModel = viewModel()) {
 @Composable
 fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(16.dp).height(150.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .height(150.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().background(
-                Brush.horizontalGradient(colors = listOf(Color(0xFF2962FF), Color(0xFF00E5FF)))
-            )
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.horizontalGradient(colors = listOf(Color(0xFF2962FF), Color(0xFF00E5FF)))
+                )
         ) {
             Column(
                 modifier = Modifier.align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = stringResource(id = R.string.current_balance), color = Color.White.copy(alpha = 0.8f))
+                Text(
+                    text = stringResource(id = R.string.current_balance),
+                    color = Color.White.copy(alpha = 0.8f)
+                )
                 Text(
                     text = "$${String.format("%.2f", balance)}",
                     fontSize = 40.sp, fontWeight = FontWeight.Bold, color = Color.White
@@ -117,9 +145,15 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
                 Button(
                     onClick = onWithdraw,
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                    modifier = Modifier.padding(top = 8.dp).height(36.dp)
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .height(36.dp)
                 ) {
-                    Text(stringResource(id = R.string.withdraw_funds), color = Color.Black, fontSize = 12.sp)
+                    Text(
+                        stringResource(id = R.string.withdraw_funds),
+                        color = Color.Black,
+                        fontSize = 12.sp
+                    )
                 }
             }
         }
@@ -142,10 +176,14 @@ fun TaskList(tasks: List<Task>, onTaskClick: (Double) -> Unit) {
 fun TaskItem(task: Task, onClick: (Double) -> Unit) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        modifier = Modifier.fillMaxWidth().clickable { onClick(task.reward) }
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick(task.reward) }
     ) {
         Row(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -156,11 +194,23 @@ fun TaskItem(task: Task, onClick: (Double) -> Unit) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Text(text = stringResource(id = task.title), color = Color.White, fontWeight = FontWeight.Bold)
-                    Text(text = stringResource(id = task.description), color = Color.Gray, fontSize = 12.sp)
+                    Text(
+                        text = stringResource(id = task.title),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(id = task.description),
+                        color = Color.Gray,
+                        fontSize = 12.sp
+                    )
                 }
             }
-            Text(text = "+$${task.reward}", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold)
+            Text(
+                text = "+$${task.reward}",
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
