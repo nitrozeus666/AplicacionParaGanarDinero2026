@@ -23,11 +23,15 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
     private val _balance = MutableStateFlow(0.00)
     val balance: StateFlow<Double> = _balance.asStateFlow()
 
+    private val _isDarkMode = MutableStateFlow(true)
+    val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
+
     init {
         viewModelScope.launch {
-            userPreferences.balance.collect { savedBalance ->
-                _balance.value = savedBalance
-            }
+            userPreferences.balance.collect { _balance.value = it }
+        }
+        viewModelScope.launch {
+            userPreferences.isDarkMode.collect { _isDarkMode.value = it }
         }
     }
 
@@ -37,6 +41,12 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
         Task(3, R.string.task_translate_title, R.string.task_translate_desc, 0.30, Icons.Default.CheckCircle),
         Task(4, R.string.task_bandwidth_title, R.string.task_bandwidth_desc, 0.10, Icons.Default.Wallet)
     )
+
+    fun toogleTheme() {
+        viewModelScope.launch {
+            userPreferences.saveTheme(!_isDarkMode.value)
+        }
+    }
 
     fun completeTask(reward: Double) {
         val newTotal = _balance.value + reward
