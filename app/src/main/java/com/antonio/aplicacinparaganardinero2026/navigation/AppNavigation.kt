@@ -43,6 +43,9 @@ fun AppNavigation(
                     // Cuando tocan "Retirar Fondos", navegamos a la pantalla de retiro
                     onWithdrawClick = {
                         navController.navigate("withdraw")
+                    },
+                    onProfileClick = {
+                        navController.navigate("profile")
                     }
                 )
             }
@@ -77,7 +80,7 @@ fun AppNavigation(
             composable("profile") {
                 ProfileScreen(
                     viewModel = viewModel,
-                    onNavigateBack = { navController.popBackStack()}
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
         }

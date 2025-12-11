@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -86,7 +87,8 @@ fun HomeScreen(
     viewModel: EarningsViewModel,
     onLanguageChange: (String) -> Unit,
     onTaskClick: (Int) -> Unit,
-    onWithdrawClick: () -> Unit
+    onWithdrawClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
     // Escuchamos los datos vivos del ViewModel
     val balance by viewModel.balance.collectAsState()
@@ -107,6 +109,16 @@ fun HomeScreen(
                         containerColor = MaterialTheme.colorScheme.surface,
                         titleContentColor = MaterialTheme.colorScheme.primary
                     ),
+
+                    navigationIcon = {
+                        IconButton(onClick = onProfileClick) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Profile",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
                     actions = {
                         // Botón de Modo Oscuro/Claro
                         // CORREGIDO: toogleTheme -> toggleTheme
