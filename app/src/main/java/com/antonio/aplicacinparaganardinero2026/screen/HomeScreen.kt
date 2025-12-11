@@ -109,8 +109,10 @@ fun HomeScreen(
                     ),
                     actions = {
                         // Botón de Modo Oscuro/Claro
-                        IconButton(onClick = { viewModel.toogleTheme() }) {
+                        // CORREGIDO: toogleTheme -> toggleTheme
+                        IconButton(onClick = { viewModel.toggleTheme() }) {
                             Icon(
+                                // AHORA ESTO FUNCIONARÁ PORQUE AÑADIMOS LOS IMPORTS ARRIBA
                                 imageVector = if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
                                 contentDescription = "Toggle Theme",
                                 tint = MaterialTheme.colorScheme.onSurface
@@ -140,7 +142,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .background(MaterialTheme.colorScheme.background) // Usa el color de fondo del tema
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 // Tarjeta de Saldo
                 BalanceCard(
@@ -153,7 +155,7 @@ fun HomeScreen(
                 // Título de la lista
                 Text(
                     text = stringResource(id = R.string.available_tasks),
-                    color = MaterialTheme.colorScheme.onSurface, // Se adapta a negro o blanco
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -166,7 +168,6 @@ fun HomeScreen(
             }
         }
     }
-
 }
 
 // --- 3. COMPONENTES REUTILIZABLES ---
@@ -185,7 +186,6 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    // Mantenemos el gradiente azul siempre, se ve bien en ambos modos
                     Brush.horizontalGradient(
                         colors = listOf(Color(0xFF2962FF), Color(0xFF00E5FF))
                     )
@@ -197,7 +197,7 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
             ) {
                 Text(
                     text = stringResource(id = R.string.current_balance),
-                    color = Color.White.copy(alpha = 0.8f) // Siempre blanco porque el fondo es azul
+                    color = Color.White.copy(alpha = 0.8f)
                 )
                 Text(
                     text = "$${String.format(Locale.US, "%.2f", balance)}",
@@ -223,8 +223,8 @@ fun BalanceCard(balance: Double, onWithdraw: () -> Unit) {
 }
 
 @Composable
-fun TaskList(tasks: List<Task>, onTaskClick: (Int) -> Unit) { // (Int) -> Unit
-    LazyColumn() {
+fun TaskList(tasks: List<Task>, onTaskClick: (Int) -> Unit) {
+    LazyColumn {
         items(tasks) { task ->
             TaskItem(task, onTaskClick)
         }
@@ -232,13 +232,13 @@ fun TaskList(tasks: List<Task>, onTaskClick: (Int) -> Unit) { // (Int) -> Unit
 }
 
 @Composable
-fun TaskItem(task: Task, onClick: (Int) -> Unit) { // (Int) -> Unit {
+fun TaskItem(task: Task, onClick: (Int) -> Unit) {
     Card(
-        // El color de fondo de la tarjeta cambia según el tema (Blanco o Gris oscuro)
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 6.dp) // Añadí un poco de margen para que se vea mejor
             .clickable { onClick(task.id) }
     ) {
         Row(
@@ -252,15 +252,14 @@ fun TaskItem(task: Task, onClick: (Int) -> Unit) { // (Int) -> Unit {
                 Icon(
                     imageVector = task.icon,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary, // Verde (Neon o Bosque)
+                    tint = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.size(32.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    // Título y descripción usan los IDs de string resources
                     Text(
                         text = stringResource(id = task.title),
-                        color = MaterialTheme.colorScheme.onSurface, // Texto adaptativo
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold
                     )
                     Text(

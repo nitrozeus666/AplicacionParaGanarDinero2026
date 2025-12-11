@@ -4,9 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Wallet
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -42,7 +39,7 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
         Task(4, R.string.task_bandwidth_title, R.string.task_bandwidth_desc, 0.10, Icons.Default.Wallet)
     )
 
-    fun toogleTheme() {
+    fun toggleTheme() {
         viewModelScope.launch {
             userPreferences.saveTheme(!_isDarkMode.value)
         }

@@ -8,7 +8,6 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.antonio.aplicacinparaganardinero2026.model.UserPreferences
 import com.antonio.aplicacinparaganardinero2026.navigation.AppNavigation
-import com.antonio.aplicacinparaganardinero2026.screen.HomeScreen
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModelFactory
 
