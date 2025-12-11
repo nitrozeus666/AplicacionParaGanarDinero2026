@@ -96,7 +96,7 @@ fun WithdrawScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Disponible para retirar:", color = MaterialTheme.colorScheme.onSurface)
                     Text(
-                        text = "$${String.format(Locale.US, ".2f", balance)}",
+                        text = "$${String.format(Locale.US, "%.2f", balance)}",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
