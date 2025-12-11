@@ -50,7 +50,7 @@ import com.antonio.aplicacinparaganardinero2026.model.Task
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
 
 @Composable
-fun AplicaciónParaGanarDinero2026Theme(
+fun AplicacionParaGanarDinero2026Theme(
     darkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
@@ -91,7 +91,7 @@ fun HomeScreen(
     val balance by viewModel.balance.collectAsState()
     val isDarkMode by viewModel.isDarkMode.collectAsState()
 
-    AplicaciónParaGanarDinero2026Theme(darkTheme = isDarkMode) {
+    AplicacionParaGanarDinero2026Theme(darkTheme = isDarkMode) {
         Scaffold(
             topBar = {
                 TopAppBar(
