@@ -8,13 +8,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.antonio.aplicacinparaganardinero2026.R
 import com.antonio.aplicacinparaganardinero2026.model.Task
+import com.antonio.aplicacinparaganardinero2026.model.UserPreferences
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
-class EarningsViewModel : ViewModel() {
-    var balance by mutableStateOf(0.00)
-        private set
+class EarningsViewModel(private val userPreferences: UserPreferences) : ViewModel() {
+    private val _balance = MutableStateFlow(0.00)
+    val balance: StateFlow<Double> = _balance.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            userPreferences.balance.collect { savedBalance ->
+                _balance.value = savedBalance
+            }
+        }
+    }
 
     val tasks = listOf(
         Task(1, R.string.task_vision_title, R.string.task_vision_desc, 0.50, Icons.Default.CheckCircle),
@@ -24,10 +40,28 @@ class EarningsViewModel : ViewModel() {
     )
 
     fun completeTask(reward: Double) {
-        balance += reward
+        val newTotal = _balance.value + reward
+        updateBalance(newTotal)
     }
 
     fun withdraw() {
-        balance = 0.0
+        updateBalance(0.0)
+    }
+
+    private fun updateBalance(amount: Double) {
+        viewModelScope.launch {
+            userPreferences.saveBalance(amount)
+        }
+    }
+}
+
+class EarningsViewModelFactory(private val userPreferences: UserPreferences) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(EarningsViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return EarningsViewModel(userPreferences) as T
+        } else {
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
     }
 }
