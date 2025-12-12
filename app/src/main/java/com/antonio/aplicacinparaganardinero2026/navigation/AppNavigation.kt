@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.antonio.aplicacinparaganardinero2026.screen.AplicacionParaGanarDinero2026Theme
 import com.antonio.aplicacinparaganardinero2026.screen.HomeScreen
+import com.antonio.aplicacinparaganardinero2026.screen.LeaderboardScreen
 import com.antonio.aplicacinparaganardinero2026.screen.ProfileScreen
 import com.antonio.aplicacinparaganardinero2026.screen.TaskDetailScreen
 import com.antonio.aplicacinparaganardinero2026.screen.WithdrawScreen
@@ -46,6 +47,9 @@ fun AppNavigation(
                     },
                     onProfileClick = {
                         navController.navigate("profile")
+                    },
+                    onLeaderboardClick = {
+                        navController.navigate("leaderboard")
                     }
                 )
             }
@@ -77,8 +81,17 @@ fun AppNavigation(
                 )
             }
 
+            // --- PANTALLA 4: PERFIL ---
             composable("profile") {
                 ProfileScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+
+            // --- PANTALLA 5: RANKING ---
+            composable("leaderboard") {
+                LeaderboardScreen(
                     viewModel = viewModel,
                     onNavigateBack = { navController.popBackStack() }
                 )

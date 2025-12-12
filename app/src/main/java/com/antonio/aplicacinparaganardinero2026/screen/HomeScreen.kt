@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -88,7 +89,8 @@ fun HomeScreen(
     onLanguageChange: (String) -> Unit,
     onTaskClick: (Int) -> Unit,
     onWithdrawClick: () -> Unit,
-    onProfileClick: () -> Unit
+    onProfileClick: () -> Unit,
+    onLeaderboardClick: () -> Unit
 ) {
     // Escuchamos los datos vivos del ViewModel
     val balance by viewModel.balance.collectAsState()
@@ -116,6 +118,13 @@ fun HomeScreen(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = "Profile",
                                 tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        IconButton(onClick = onLeaderboardClick) {
+                            Icon(
+                                Icons.Default.EmojiEvents,
+                                contentDescription = "Ranking",
+                                tint = Color(0xFFFFD700)
                             )
                         }
                     },
@@ -250,7 +259,10 @@ fun TaskItem(task: Task, onClick: (Int) -> Unit) {
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 6.dp) // Añadí un poco de margen para que se vea mejor
+            .padding(
+                horizontal = 16.dp,
+                vertical = 6.dp
+            ) // Añadí un poco de margen para que se vea mejor
             .clickable { onClick(task.id) }
     ) {
         Row(
