@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.antonio.aplicacinparaganardinero2026.model.Competitor
 import com.antonio.aplicacinparaganardinero2026.viewmodel.EarningsViewModel
@@ -106,11 +107,13 @@ fun RankingItem(user: Competitor) {
 
     val isMe = user.rank == 10
 
+    val backgroundColor = if (isMe) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                          else MaterialTheme.colorScheme.surfaceVariant
+
+    val textColor = MaterialTheme.colorScheme.onSurface
+
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = if (isMe) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                             else MaterialTheme.colorScheme.onSurface
-        ),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)
@@ -119,36 +122,40 @@ fun RankingItem(user: Competitor) {
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "${user.rank}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = rankColor,
-                    modifier = Modifier.width(40.dp)
-                )
+            Text(
+                text = "#${user.rank}",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = rankColor,
+                modifier = Modifier.width(40.dp)
+            )
 
-                Text(text = user.countryFlag, fontSize = 20.sp)
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
+            Text(text = user.countryFlag, fontSize = 20.sp)
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = user.name,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor,
+                    maxLines = 1
+                )
+                if (isMe) {
                     Text(
-                        text = user.name,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        "¡Ese eres tú!",
+                        fontSize = 10.sp,
+                        color = MaterialTheme.colorScheme.primary
                     )
-                    if (isMe) {
-                        Text("¡Ese eres tú!", fontSize = 10.sp, color = MaterialTheme.colorScheme.primary)
-                    }
                 }
             }
 
             Text(
-                text = "$${String.format(Locale.US, "%.2f", user.earnings)}",
+                text = "$${String.format(java.util.Locale.US, "%.2f", user.earnings)}",
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.secondary
+                color = if (isMe) MaterialTheme.colorScheme.primary else Color(0xFF76FF03)
             )
         }
     }
