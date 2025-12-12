@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.antonio.aplicacinparaganardinero2026.R
+import com.antonio.aplicacinparaganardinero2026.model.Competitor
 import com.antonio.aplicacinparaganardinero2026.model.Task
 import com.antonio.aplicacinparaganardinero2026.model.Transaction
 import com.antonio.aplicacinparaganardinero2026.model.UserPreferences
@@ -42,6 +43,19 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
         Task(2, R.string.task_ad_title, R.string.task_ad_desc, 0.15, Icons.Default.AttachMoney),
         Task(3, R.string.task_translate_title, R.string.task_translate_desc, 0.30, Icons.Default.CheckCircle),
         Task(4, R.string.task_bandwidth_title, R.string.task_bandwidth_desc, 0.10, Icons.Default.Wallet)
+    )
+
+    val leaderboard = listOf(
+        Competitor(1, "CyberKing_99", 5420.50, "🇺🇸"),
+        Competitor(2, "NeonStalker", 4890.00, "🇯🇵"),
+        Competitor(3, "CryptoMaster", 4100.20, "🇩🇪"),
+        Competitor(4, "AI_Hunter", 3200.00, "🇬🇧"),
+        Competitor(5, "NetRunner2077", 2900.50, "🇪🇸"),
+        Competitor(6, "BitFarmer", 1500.00, "🇧🇷"),
+        Competitor(7, "DataMiner", 980.00, "🇫🇷"),
+        Competitor(8, "PixelArtist", 850.50, "🇨🇦"),
+        Competitor(9, "VoidWalker", 720.00, "🇰🇷"),
+        Competitor(10, "_Antxon02", 0.00, "📍"),
     )
 
     fun toggleTheme() {
@@ -87,6 +101,14 @@ class EarningsViewModel(private val userPreferences: UserPreferences) : ViewMode
             isDeposit = isDeposit
         )
         _history.value = listOf(newTransaction) + _history.value
+    }
+
+    fun getUpdatedLeaderboard(): List<Competitor> {
+        val myUser = leaderboard.find { it.rank == 10 }?.copy(earnings = _balance.value)
+
+        return if (myUser != null) {
+            leaderboard.toMutableList().apply { set(9, myUser) }
+        } else leaderboard
     }
 }
 
