@@ -120,6 +120,8 @@ fun HomeScreen(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
+                    },
+                    actions = {
                         IconButton(onClick = onLeaderboardClick) {
                             Icon(
                                 Icons.Default.EmojiEvents,
@@ -127,8 +129,7 @@ fun HomeScreen(
                                 tint = Color(0xFFFFD700)
                             )
                         }
-                    },
-                    actions = {
+
                         // Botón de Modo Oscuro/Claro
                         // CORREGIDO: toogleTheme -> toggleTheme
                         IconButton(onClick = { viewModel.toggleTheme() }) {
